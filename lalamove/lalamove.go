@@ -12,6 +12,7 @@ import (
 	"strings"
 	"time"
 
+	"github.com/eddielau42/lalamove-go-api/logger"
 	"github.com/eddielau42/lalamove-go-api/model/city"
 	"github.com/eddielau42/lalamove-go-api/model/driver"
 	"github.com/eddielau42/lalamove-go-api/model/order"
@@ -37,12 +38,24 @@ type Client struct {
 	debug bool
 }
 
+type Config struct {
+	apikey string
+	secret string
+	country string
+	logfile string
+}
+
 // 创建客户端实例
-func NewClient(apiKey, apiSecret, country string) *Client {
+func NewClient(conf Config) *Client {
+	if conf.logfile == "" {
+		conf.logfile = "../lalamove.log"
+	}
+	logger.SetFile(conf.logfile)
+
 	return &Client{
-		apiKey: apiKey,
-		apiSecret: apiSecret,
-		country: country,
+		apiKey: conf.apikey,
+		apiSecret: conf.secret,
+		country: conf.country,
 	}
 }
 // 设置沙箱环境
@@ -360,8 +373,8 @@ func (cli *Client) SetWebhook(url string) (bool, error) {
 }
 
 
+// 请求方法
 const (
-	// 请求方法
 	METHOD_GET    = "GET"
 	METHOD_POST   = "POST"
 	METHOD_PUT    = "PUT"
@@ -369,13 +382,14 @@ const (
 	METHOD_DELETE = "DELETE"
 )
 
+// 封装API返回结果
 type APIResult struct {
 	ReqID string
 	Request *http.Request
 	Response *http.Response
 	Body []byte
 }
-// APIResult.Parse	解析返回数据
+// Parse	解析返回数据
 func (r APIResult) Parse(bindData interface{}) error {
 	var err error
 
@@ -390,9 +404,10 @@ func (r APIResult) Parse(bindData interface{}) error {
 		return nil
 	}
 
+	r.printStackLog()
 
 	// 失败
-	if respStatusCode >= http.StatusBadRequest {
+	if respStatusCode >= http.StatusBadRequest && respStatusCode < http.StatusInternalServerError {
 		errData := struct{
 			Errors []APIError `json:"errors"`
 		}{}
@@ -401,8 +416,6 @@ func (r APIResult) Parse(bindData interface{}) error {
 			fmt.Printf("----- 解析数据错误! error: %s\n", err.Error())
 			return err
 		}
-
-		// TODO : logger
 		
 		// 取最后一条错误信息内容
 		msg := errData.Errors[len(errData.Errors)-1]
@@ -413,8 +426,42 @@ func (r APIResult) Parse(bindData interface{}) error {
 		return errors.New(errMsg)
 	}
 
+	// 第三方服务异常 (HttpStatusCode >= 500)
+	if respStatusCode >= http.StatusInternalServerError {
+		errData := struct{
+			Message string `json:"message"`
+		}{}
+		err = json.Unmarshal(r.Body, &errData)
+		if err != nil {
+			fmt.Printf("----- 解析数据错误! error: %s\n", err.Error())
+			return err
+		}
+
+		return errors.New(errData.Message)
+	}
+
 	return nil
 }
+
+// printStackLog	打印API调用信息
+func (r APIResult) printStackLog() {
+	
+	reqHeader, _ := json.Marshal(r.Request.Header)
+
+	logger.Error(
+		"----> 请求失败! 打印API调用信息:\n"+
+		"------------------------------\n"+
+		"Req-ID: %s\nReq-URL: %s\nReq-Method: %s\nReq-Header: %+v\nResp-StatusCode: %d\nResp-Body: %s\n"+
+		"------------------------------\n",
+		r.ReqID,
+		r.Request.URL,
+		r.Request.Method,
+		string(reqHeader),
+		r.Response.StatusCode,
+		string(r.Body),
+	)
+}
+
 
 type APIError struct {
 	ID string `json:"id"`

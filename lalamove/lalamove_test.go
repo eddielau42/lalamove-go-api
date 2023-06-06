@@ -20,7 +20,11 @@ var (
 )
 
 func init() {
-	cli = NewClient(apikey, secret, enum.COUNTRY_HONGKONG)
+	cli = NewClient(Config{
+		apikey: apikey,
+		secret: secret,
+		country: enum.COUNTRY_HONGKONG,
+	})
 	// Set sandbox mode
 	cli.Sandbox()
 	// Set debug mode
@@ -28,7 +32,7 @@ func init() {
 }
 
 func TestClient(t *testing.T) {
-	
+	// t.Logf("----> lalamove-client: %+v\n", cli)
 	assert.True(t, cli.IsSandbox())
 
 	// Change country
@@ -216,7 +220,7 @@ func TestChangeDriver(t *testing.T) {
 
 func TestGetCityInfo(t *testing.T) {
 	// cli.SetCountry(enum.COUNTRY_PHILIPPINES)
-	// cli.SetCountry("CN") // invalidate value
+	cli.SetCountry("CN") // invalidate value
 	cities, err := cli.GetCityInfo()
 	if err != nil {
 		t.Logf("\n----> GetCityInfo_error: %s", err.Error())

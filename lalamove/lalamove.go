@@ -47,10 +47,10 @@ type Config struct {
 
 // 创建客户端实例
 func NewClient(conf Config) *Client {
-	if conf.logfile == "" {
-		conf.logfile = "../lalamove.log"
+	if conf.Logfile == "" {
+		conf.Logfile = "../lalamove.log"
 	}
-	logger.SetFile(conf.logfile)
+	logger.SetFile(conf.Logfile)
 
 	return &Client{
 		apiKey: conf.apikey,

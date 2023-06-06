@@ -24,6 +24,7 @@ func init() {
 		apikey: apikey,
 		secret: secret,
 		country: enum.COUNTRY_HONGKONG,
+		// logfile: "../lalamove.log",
 	})
 	// Set sandbox mode
 	cli.Sandbox()

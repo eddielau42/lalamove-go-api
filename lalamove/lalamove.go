@@ -39,10 +39,10 @@ type Client struct {
 }
 
 type Config struct {
-	apikey string
-	secret string
-	country string
-	logfile string
+	Apikey string
+	Secret string
+	Country string
+	Logfile string
 }
 
 // 创建客户端实例

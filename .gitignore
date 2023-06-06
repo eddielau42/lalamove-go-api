@@ -1,0 +1,73 @@
+.env
+.history
+
+# Golang #
+######################
+# `go test -c` 生成的二进制文件
+*.test
+# go coverage 工具
+*.out
+*.prof
+*.cgo1.go
+*.cgo2.c
+_cgo_defun.c
+_cgo_gotypes.go
+_cgo_export.*
+
+# Compile files #
+###################
+*.com
+*.class
+*.dll
+*.exe
+*.o
+*.so
+
+# Compressed package #
+############
+*.7z
+*.dmg
+*.gz
+*.iso
+*.jar
+*.rar
+*.tar
+*.zip
+
+# log files & database files #
+######################
+*.log
+*.sqlite
+*.db
+
+# Temporary files #
+######################
+tmp/
+.tmp/
+
+# System files #
+######################
+.DS_Store
+.DS_Store?
+.AppleDouble
+.LSOverride
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+.TemporaryItems
+.fseventsd
+.VolumeIcon.icns
+.com.apple.timemachine.donotpresent
+
+# Editors #
+######################
+.idea/
+/go_build_*
+out/
+.vscode/
+.vscode/settings.json
+*.sublime*
+__debug_bin
+.project

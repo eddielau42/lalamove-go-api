@@ -53,9 +53,9 @@ func NewClient(conf Config) *Client {
 	logger.SetFile(conf.Logfile)
 
 	return &Client{
-		apiKey: conf.apikey,
-		apiSecret: conf.secret,
-		country: conf.country,
+		apiKey: conf.Apikey,
+		apiSecret: conf.Secret,
+		country: conf.Country,
 	}
 }
 // 设置沙箱环境

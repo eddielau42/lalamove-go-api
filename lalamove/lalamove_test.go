@@ -245,3 +245,13 @@ func TestGetCityInfo(t *testing.T) {
 		// assert.NotEmpty(t, cities[0].Services[0].DeliveryItemSpecification)
 	}
 }
+
+func TestSetWebhook(t *testing.T) {
+	webhookURL := "https://your.webhook.link"
+
+	ok, err := cli.SetWebhook(webhookURL)
+	if err != nil {
+		t.Logf("\n----> SetWebhook_error: %s", err.Error())
+	}
+	assert.True(t, ok)
+}

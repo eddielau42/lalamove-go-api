@@ -55,7 +55,7 @@ func main() {
 		return
 	}
 	if market == "" {
-		market = enum.COUNTRY_HONGKONG
+		market = enum.AREA_CODE_HK
 	}
 
 	// Check sandbox
@@ -96,7 +96,7 @@ func handle() {
 func getLalamoveConfigFromEnv() lalamove.Config {
 	country := os.Getenv("LALAMOVE_MARKET")
 	if country == "" {
-		country = enum.COUNTRY_HONGKONG
+		country = enum.AREA_CODE_HK
 	}
 
 	conf := lalamove.Config{

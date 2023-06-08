@@ -1,14 +1,5 @@
 package enum
 
-// 国家地区
-const (
-	COUNTRY_HONGKONG    = "HK"
-	COUNTRY_PHILIPPINES = "PH"
-	COUNTRY_SINGAPORE   = "SG"
-	COUNTRY_THAILAND    = "TH"
-	COUNTRY_TAIWAN      = "TW"
-)
-
 // 地区编码
 const (
 	AREA_CODE_BR = "BR" // Brasil

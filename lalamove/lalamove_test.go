@@ -23,7 +23,7 @@ func init() {
 	cli = NewClient(Config{
 		Apikey: apikey,
 		Secret: secret,
-		Country: enum.COUNTRY_HONGKONG,
+		Country: enum.AREA_CODE_HK,
 		// Logfile: "../lalamove.log",
 	})
 	// Set sandbox mode

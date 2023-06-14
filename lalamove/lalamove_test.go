@@ -37,8 +37,8 @@ func TestClient(t *testing.T) {
 	assert.True(t, cli.IsSandbox())
 
 	// Change country
-	cli.SetCountry(enum.COUNTRY_TAIWAN)
-	assert.EqualValues(t, cli.GetCountry(), enum.COUNTRY_TAIWAN)
+	cli.SetCountry(enum.AREA_CODE_TW)
+	assert.EqualValues(t, cli.GetCountry(), enum.AREA_CODE_TW)
 }
 
 func TestGetQuotations(t *testing.T) {
@@ -59,19 +59,22 @@ func TestGetQuotations(t *testing.T) {
 			Lat: "22.29553167157697",
 			Lng: "114.16885175766998",
 		},
-	}).
-	// Optional fields - item
-	SetItem(quotation.QuotationItem{
-		Quantity: "12",
-		Weight: "LESS_THAN_3_KG",
-		Categories: []string{"FOOD_DELIVERY", "OFFICE_ITEM"},
-		HandlingInstructions: []string{"KEEP_UPRIGHT"},
-	}).
-	// Optional fields - specialRequests
-	AddSpecialRequest("TOLL_FEE_10")
+	})
+
+
+	// q.
+	// // Optional fields - item
+	// SetItem(quotation.QuotationItem{
+	// 	Quantity: "12",
+	// 	Weight: "LESS_THAN_3_KG",
+	// 	Categories: []string{"FOOD_DELIVERY", "OFFICE_ITEM"},
+	// 	HandlingInstructions: []string{"KEEP_UPRIGHT"},
+	// }).
+	// // Optional fields - specialRequests
+	// AddSpecialRequest("TOLL_FEE_10")
 	
 	// Optional fields - isRouteOptimized
-	q.IsRouteOptimized = true
+	// q.IsRouteOptimized = true
 
 	// Optional fields - scheduleAt
 	// scheduledAt := time.Now()
@@ -90,7 +93,7 @@ func TestGetQuotations(t *testing.T) {
 }
 
 func TestGetQuotationDetail(t *testing.T) {
-	id := "2717235714549903754"
+	id := "2723174418325999954"
 	t.Logf("\n----> quotationID: %s \n", id)
 
 	q, err := cli.GetQuotationDetail(id)
@@ -106,7 +109,7 @@ func TestGetQuotationDetail(t *testing.T) {
 }
 
 func TestPlaceOrder(t *testing.T) {
-	qID := "2717235714549903754"
+	qID := "2723174418325999954"
 	qd, _ := cli.GetQuotationDetail(qID)
 	// t.Logf("\n----> quotation_detail:\n%+v\n", qd)
 

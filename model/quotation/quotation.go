@@ -15,7 +15,7 @@ type Quotation struct {
 	ScheduleAt string `json:"scheduleAt,omitempty"`
 	SpecialRequests []string `json:"specialRequests,omitempty"`
 	IsRouteOptimized bool `json:"isRouteOptimized"`
-	Item QuotationItem `json:"item,omitempty"`
+	Item *QuotationItem `json:"item,omitempty"`
 }
 
 // SetScheduleAt	设置取货时间; 如果是立即下单，请省略
@@ -27,7 +27,7 @@ func (q *Quotation) SetScheduleAt(t time.Time) *Quotation {
 }
 // SetItem	设置配送物品的信息
 func (q *Quotation) SetItem(item QuotationItem) *Quotation {
-	q.Item = item
+	q.Item = &item
 	return q
 }
 // AddSpecialRequest	添加配送特别要求信息

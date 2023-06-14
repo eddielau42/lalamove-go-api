@@ -386,6 +386,7 @@ const (
 type APIResult struct {
 	ReqID string
 	Request *http.Request
+	Payload []byte
 	Response *http.Response
 	Body []byte
 }
@@ -448,15 +449,23 @@ func (r APIResult) printStackLog() {
 	
 	reqHeader, _ := json.Marshal(r.Request.Header)
 
-	logger.Error(
-		"----> 请求失败! 打印API调用信息:\n"+
+	logLevel := logger.ERROR_LEVEL
+	tips := "请求失败!"
+	if r.Response.StatusCode >= http.StatusOK && r.Response.StatusCode < http.StatusMultipleChoices {
+		logLevel = logger.DEBUG_LEVEL
+		tips = "请求成功!"
+	}
+
+	logger.WriteLog(logLevel,
+		"----> " + tips + " 打印API调用信息:\n"+
 		"------------------------------\n"+
-		"Req-ID: %s\nReq-URL: %s\nReq-Method: %s\nReq-Header: %+v\nResp-StatusCode: %d\nResp-Body: %s\n"+
+		"Req-ID: %s\nReq-URL: %s\nReq-Method: %s\nReq-Header: %+v\nReq-Body: %+v\nResp-StatusCode: %d\nResp-Body: %s\n"+
 		"------------------------------\n",
 		r.ReqID,
 		r.Request.URL,
 		r.Request.Method,
 		string(reqHeader),
+		string(r.Payload),
 		r.Response.StatusCode,
 		string(r.Body),
 	)
@@ -482,7 +491,8 @@ func (cli Client) Request(method, uri string, params []byte) (*APIResult, error)
 	}
 	url = url + uri
 
-	result.Request, err = http.NewRequest(method, url, bytes.NewBuffer(params))
+	result.Payload = params
+	result.Request, err = http.NewRequest(method, url, bytes.NewBuffer(result.Payload))
 	if err != nil {
 		log.Fatalln(err)
 		return nil, err
@@ -521,6 +531,15 @@ func (cli Client) Request(method, uri string, params []byte) (*APIResult, error)
 	// 将响应数据读取存放到 "result.Body" 中
 	result.Body, err = ioutil.ReadAll(result.Response.Body)
 	defer result.Response.Body.Close()
+
+	// 调试模式下
+	if cli.debug {
+		// 请求成功
+		if result.Response.StatusCode >= http.StatusOK && result.Response.StatusCode < http.StatusMultipleChoices {
+			// 打印输出请求信息
+			result.printStackLog()
+		}
+	}
 
 	return result, nil
 }

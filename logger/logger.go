@@ -63,27 +63,27 @@ func SetFile(file string) {
 
 func Debug(format string, args ...any) {
 	if logLevel <= DEBUG_LEVEL {
-		writeLog(DEBUG_LEVEL, format, args...)
+		WriteLog(DEBUG_LEVEL, format, args...)
 	}
 }
 func Info(format string, args ...any) {
 	if logLevel <= INFO_LEVEL {
-		writeLog(INFO_LEVEL, format, args...)
+		WriteLog(INFO_LEVEL, format, args...)
 	}
 }
 func Warn(format string, args ...any) {
 	if logLevel <= WARN_LEVEL {
-		writeLog(WARN_LEVEL, format, args...)
+		WriteLog(WARN_LEVEL, format, args...)
 	}
 }
 func Error(format string, args ...any) {
 	if logLevel <= ERROR_LEVEL {
-		writeLog(ERROR_LEVEL, format, args...)
+		WriteLog(ERROR_LEVEL, format, args...)
 	}
 }
 
-// writeLog	日志内容写入
-func writeLog(level int, format string, args ...any) {
+// WriteLog	日志内容写入
+func WriteLog(level int, format string, args ...any) {
 	checkDayChange()
 
 	logWriter.Printf(getLogLevelTag(level) + " " + getPrefix() + format, args...)
